@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import { errorHandler } from "./middleware/errorHandler";
-import mathsRoutes from "./modules/maths/routes";
 import authRoutes from "./modules/auth/routes";
 import quizRoutes from "./modules/quiz/routes";
 const cors = require("cors");
@@ -25,7 +24,6 @@ export class Server {
   private enableRoutes() {
     this.app.use("/api/auth", authRoutes);
     this.app.use("/api/quiz", quizRoutes);
-    this.app.use("/api/maths", mathsRoutes);
     this.app.use(errorHandler);
   }
 
