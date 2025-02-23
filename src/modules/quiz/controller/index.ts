@@ -75,6 +75,17 @@ export class QuizController {
     }
   };
 
+  async saveQuizProgress(req: Request, res: Response) {
+    try {
+      const { sessionId } = req.params;
+      const { answers } = req.body;
+      await quizService.saveQuizProgress(sessionId, answers);
+      return res.status(200).json({ success: true, message: "Progress saved successfully" });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
   submitQuizAnswers = async (
     req: Request,
     res: Response,

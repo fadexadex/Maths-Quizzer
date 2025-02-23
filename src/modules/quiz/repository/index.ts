@@ -61,6 +61,27 @@ export class QuizRepository {
   }
   
 
+  async saveQuizProgress(sessionId: string, answers: { questionId: string; userAnswer: string | null }[]) {
+    const session = await this.prisma.quizSession.findUnique({
+      where: { id: sessionId },
+      include: { questions: true }
+    });
+  
+    if (!session) throw new Error("Quiz session not found");
+  
+    await this.prisma.$transaction(
+      answers.map(answer => 
+        this.prisma.quizQuestion.update({
+          where: { id: answer.questionId },
+          data: { userAnswer: answer.userAnswer },
+        })
+      )
+    );
+  
+    return { message: "Progress saved successfully" };
+  }
+  
+
   async completeQuizSession(sessionId: string, score: number) {
     return this.prisma.quizSession.update({
       where: { id: sessionId },

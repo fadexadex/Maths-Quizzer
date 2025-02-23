@@ -39,6 +39,12 @@ router.get(
 );
 
 router.post(
+  "/quiz-session/:sessionId/save",
+  authGuard,
+  quizController.saveQuizProgress
+);
+
+router.post(
   "/quiz-session/:sessionId/submit",
   authGuard,
   quizController.submitQuizAnswers

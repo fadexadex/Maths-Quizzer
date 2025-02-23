@@ -75,6 +75,10 @@ export class QuizService {
     return quizSession;
   }
 
+  async saveQuizProgress(sessionId: string, answers: { questionId: string; userAnswer: string | null }[]) {
+    return quizRepo.saveQuizProgress(sessionId, answers);
+  }
+
   async submitQuizAnswers(
     sessionId: string,
     answers: { questionId: string; userAnswer: string }[]
