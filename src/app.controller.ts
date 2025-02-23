@@ -1,7 +1,10 @@
 import express from "express";
-import { connect, connection } from "mongoose";
 import dotenv from "dotenv";
-import { errorHandler } from "./middlewares/errorHandlers";
+import { errorHandler } from "./middleware/errorHandler";
+import mathsRoutes from "./modules/maths/routes";
+import authRoutes from "./modules/auth/routes";
+import quizRoutes from "./modules/quiz/routes";
+const cors = require("cors");
 
 dotenv.config();
 
@@ -17,21 +20,18 @@ export class Server {
   private enableMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(errorHandler); 
+    this.app.use(cors());
   }
-  private connectToDatabase() {
-    connect(process.env.MONGO_DB_URL);
-    connection.on("connected", () => {
-      console.log("Connected to database");
-    });
-    connection.on("error", (error) => {
-      console.error(`Error connecting to database: ${error}`);
-    });
+  private enableRoutes() {
+    this.app.use("/api/auth", authRoutes);
+    this.app.use("/api/quiz", quizRoutes);
+    this.app.use("/api/maths", mathsRoutes);
+    this.app.use(errorHandler);
   }
 
   public startApp() {
     this.enableMiddlewares();
-    this.connectToDatabase();
+    this.enableRoutes();
     this.app.listen(this.port, () => {
       console.log(`Server is running on port ${this.port}`);
     });
